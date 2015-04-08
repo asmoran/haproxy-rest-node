@@ -90,7 +90,6 @@ module.exports = function Aqueduct (opts) {
     db.writeActivity(activityObj);
   });
 
-  this.service = me;
   this.data = data;
   this.db = db;
   this.haproxy = haproxy;
