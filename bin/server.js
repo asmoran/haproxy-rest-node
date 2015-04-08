@@ -22,7 +22,7 @@ var optimist = require('optimist')
               },
               label: {
                 describe: 'logical label for this aqueduct'
-              }
+              },
               haproxySocketPath: {
                 default: '/tmp/haproxy.status.sock',
                 describe: 'path to Haproxy socket file'
