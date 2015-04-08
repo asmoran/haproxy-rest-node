@@ -3,7 +3,6 @@ var assert = require('assert')
   , request = require('request')
   , async = require('async')
   , portfinder = require('portfinder')
-  , Thalassa = require('thalassa')
   , Hapi = require('hapi')
   , Api = require('../lib/Api')
   , Data = require('../lib/Data')
@@ -20,11 +19,6 @@ describe ('API', function () {
     var localhost = '127.0.0.1'
       , apiPort = null
       , server = null
-      , thalassaPort = null
-      , thalassaHost = localhost
-      , thalassaApiPort = null
-      , thalassaApiHost = localhost
-      , thalassaServer = null
       , haproxyManager = null
       , apiRoot = null
       ;
@@ -36,15 +30,6 @@ describe ('API', function () {
         // TODO: guarantee free ports, portfinder wasn't working right but this hack was better for now
         var port2 = port1+1, port3 = port1+2;
         assert.ifError(err);
-        thalassaPort = port1;
-        thalassaApiPort = port2;
-
-        thalassaServer = new Thalassa.Server( {
-          port: thalassaPort,
-          host: thalassaHost,
-          apiport: thalassaApiPort,
-          apihost: thalassaApiHost
-        });
 
         apiPort = port3;
         apiRoot = 'http://' + localhost + ':' + apiPort;
@@ -60,7 +45,6 @@ describe ('API', function () {
     });
 
     after (function () {
-      thalassaServer.close();
       server.stop();
     });
 

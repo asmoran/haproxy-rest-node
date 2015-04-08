@@ -6,7 +6,7 @@ var Aqueduct = require('..')
   ;
 
 // require('nodetime').profile({
-//     accountKey: '1765a180c09b73ea0a7d7262ff6dc60d776bf395', 
+//     accountKey: '1765a180c09b73ea0a7d7262ff6dc60d776bf395',
 //     appName: 'Aqueuct'
 //   });
 
@@ -22,19 +22,7 @@ var optimist = require('optimist')
               },
               label: {
                 describe: 'logical label for this aqueduct'
-              },
-              thalassaHost: {
-                default : '127.0.0.1',
-                describe: 'host of the Thalassa server'
-              },
-              thalassaPort: {
-                default : 5001,
-                describe: 'socket port of the Thalassa server'
-              },
-              thalassaApiPort: {
-                default : 9000,
-                describe: 'http API port of the Thalassa server'
-              },
+              }
               haproxySocketPath: {
                 default: '/tmp/haproxy.status.sock',
                 describe: 'path to Haproxy socket file'
@@ -113,7 +101,7 @@ sock.on('log', function (severity, msg) {
 })
 
 server.start(function () {
-  log('info', util.format("Thalassa Aqueduct listening on %s:%s", argv.host, argv.port));
+  log('info', util.format("Aqueduct listening on %s:%s", argv.host, argv.port));
 });
 
 aqueduct.haproxyManager.on('configChanged', function() { log('debug', 'Config changed') });
