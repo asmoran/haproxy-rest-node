@@ -56,6 +56,14 @@ module.exports = function Aqueduct (opts) {
     log: log
   });
 
+  var me = {
+    "name": "aqueduct",
+    "version": "1.0.0",
+    "host": "172.17.42.1",
+    "port": 10000,
+    "id": "/aqueduct/1.0.0/172.17.42.1/10000"
+  };
+
 
   // Stream stats into a leveldb
   var db = new Db(opts, function () {
@@ -90,6 +98,7 @@ module.exports = function Aqueduct (opts) {
     db.writeActivity(activityObj);
   });
 
+  this.service = me;
   this.data = data;
   this.db = db;
   this.haproxy = haproxy;
