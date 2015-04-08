@@ -66,12 +66,9 @@ if (argv.h) {
 
 var log = argv.log = require('../lib/defaultLogger')( (argv.debug == true) ? 'debug' : 'error' );
 var aqueduct = new Aqueduct(argv);
-console.log(aqueduct);
-console.log(argv);
-var server = new Hapi.Server({
-	port: argv.port,
-	host: argv.host
-});
+
+var server = new Hapi.Server();
+server.connection({ port: argv.port, host: argv.host});
 server.route(aqueduct.apiRoutes());
 
 // anything at the top level goes to index.html
