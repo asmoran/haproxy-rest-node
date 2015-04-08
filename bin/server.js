@@ -71,34 +71,6 @@ var server = new Hapi.Server();
 server.connection({ port: argv.port, host: argv.host});
 server.route(aqueduct.apiRoutes());
 
-// anything at the top level goes to index.html
-server.route({ method: 'GET', path: '/{p}', handler: { file: { path: __dirname+'/../public/index.html' }}});
-
-server.route({
-    method: 'GET',
-    path: '/{path*}',
-    handler: {
-        directory: { path: __dirname + '/../public', listing: false, index: true }
-    }
-});
-
-//Setup websocket to the client/browser
-var sock = shoe();
-sock.install(server.listener, '/aqueductStreams');
-sock.on('connection', function (stream) {
-  var s = aqueduct.createMuxStream();
-  stream.pipe(s).pipe(stream);
-
-  stream.on('end', function () {
-    s.destroy();
-  })
-
-});
-
-sock.on('log', function (severity, msg) {
-  log(severity, msg);
-})
-
 server.start(function () {
   log('info', util.format("Aqueduct listening on %s:%s", argv.host, argv.port));
 });
