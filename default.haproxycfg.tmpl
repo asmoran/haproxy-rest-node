@@ -6,11 +6,13 @@ global
   user haproxy
   group haproxy
   stats socket {{haproxySocketPath}} user node-haproxy-rest level admin
+  option tcpka
 
   defaults
     log global
     option dontlognull
     option redispatch
+    option tcpka
     retries 3
     maxconn 18000
     timeout connect 5000ms
