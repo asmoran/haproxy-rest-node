@@ -2,7 +2,6 @@ var assert = require('assert')
   , resolve = require('path').resolve
   , Haproxy = require('haproxy')
   , Data = require('./lib/Data')
-  , Db = require('./lib/Db')
   , HaproxyManager = require('./lib/HaproxyManager')
   , HaproxyStats = require('./lib/HaproxyStats')
   , Api = require('./lib/Api')
@@ -65,15 +64,8 @@ module.exports = function Aqueduct (opts) {
   };
 
 
-  // Stream stats into a leveldb
-  var db = new Db(opts, function () {
-    db.writeActivity({ type: 'activity',  time: Date.now(), verb: 'started', object: me.id });
-  });
-
   // Wire up stats to write to stats db
   haproxyStats.on('stat', function (statObj) {
-    db.writeStat(statObj);
-
     if (statObj.type === 'frontend') {
       data.setFrontendStat(statObj);
     }
@@ -89,18 +81,15 @@ module.exports = function Aqueduct (opts) {
   haproxyManager.on('configChanged', function (statObj) {
     var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyConfigChanged', object: me.id };
     log('debug', 'activity', activityObj);
-    db.writeActivity(activityObj);
   });
 
   haproxyManager.on('reloaded', function (statObj) {
     var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyRestarted', object: me.id };
     log('debug', 'activity', activityObj);
-    db.writeActivity(activityObj);
   });
 
   this.service = me;
   this.data = data;
-  this.db = db;
   this.haproxy = haproxy;
   this.haproxyManager = haproxyManager;
   this.haproxyStats = haproxyStats;
@@ -164,10 +153,6 @@ module.exports = function Aqueduct (opts) {
     };
     self.haproxyStats.on('stat', statWriteListener);
 
-    function sendStatsForHostId(hostId) {
-      self.db.statsValueStream(hostId).pipe(through(writeStatStream));
-    }
-
     function writeStatStream (data) {
       if (!statStream.destroyed) statStream.write(data);
     }
@@ -180,7 +165,6 @@ module.exports = function Aqueduct (opts) {
 
     self.haproxyManager.on('configChanged', activityWriteListenery);
     self.haproxyManager.on('reloaded', activityWriteListenery);
-    self.db.activityValueStream().pipe(through(function write(data) { activityStream.write(data); }));
 
     mx.on('end', function () {
       self.haproxyStats.removeListener('stat', statWriteListener);
