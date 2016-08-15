@@ -194,7 +194,13 @@ Create or update a `backend` by `key`. `PUT` with a `Content-Type` of `applicati
       , "mode" : "http|tcp" // default: http   
       , "natives": []  // array of strings of raw config USE SPARINGLY!!   
       , "members" : [] // if type = dynamic this is dynamically populated based on role/version subscription   
-                       // otherwise expects { host: '10.10.10.10', port: 8080}   
+                       // otherwise expects 
+					   {
+					        "name": "myserver"
+					      , "host": "10.10.10.10"
+					      , "port": 8080
+					      , "opts": "extra options"(optional)  //note: if specified, opts must be present on all members in the backend
+					   }
       , "key": "{key}"   
     }   
 
